@@ -1,24 +1,152 @@
-" Leader
-let mapleader = " "
+" Special terminal info.
+if &term =~ "xterm"
+    if has("terminfo")
+        set t_Co=16
+        set t_Sf=[3%p1%dm
+        set t_Sb=[4%p1%dm
+    else
+        set t_Co=16
+        set t_Sf=[3%dm
+        set t_Sb=[4%dm
+    endif
+endif
 
-set backspace=2   " Backspace deletes like most programs in insert mode
-set nobackup
-set nowritebackup
-set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
+set nocompatible
+set backspace=indent,eol,start
 set history=50
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
-set laststatus=2  " Always display the status line
-set autowrite     " Automatically :write before running commands
-set pastetoggle=<F10>
-set mouse=a       " Enable mouse in all modes
-set ttymouse=xterm2
 
-" Color adjustments
-syntax enable
-set background=dark
-colorscheme solarized
+map Q gq
+
+nnoremap <silent> \ :noh<CR>
+
+" Some code editing options.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+
+" Only do this for Vim version 5.0 and later.
+if version >= 500
+
+  " I like highlighting strings inside C comments
+  let c_comment_strings=1
+
+  " Switch on syntax highlighting if it wasn't on yet.
+  if !exists("syntax_on")
+    syntax on
+  endif
+
+  " Switch on search pattern highlighting.
+  set hlsearch
+
+  " For Win32 version, have "K" lookup the keyword in a help file
+  "if has("win32")
+  "  let winhelpfile='windows.hlp'
+  "  map K :execute "!start winhlp32 -k <cword> " . winhelpfile <CR>
+  "endif
+
+  " Set nice colors
+  " background for normal text is light grey
+  " Text below the last line is darker grey
+  " Cursor is green, Cyan when ":lmap" mappings are active
+  " Constants are not underlined but have a slightly lighter background
+  highlight Normal ctermbg=Black ctermfg=White
+  highlight Cursor ctermbg=Green
+  highlight lCursor ctermbg=Green
+  highlight Visual ctermbg=White ctermfg=DarkGrey
+  highlight Visual guibg=DarkGrey guifg=grey50
+
+endif
+
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'tw' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
+
+
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+    " Put these in an autocmd group, so that we can delete them easily.
+    augroup vimrcEx
+        autocmd!
+    
+        " When editing a file, always jump to the last known cursor position.
+        " Don't do it for commit messages, when the position is invalid, or when
+        " inside an event handler (happens when dropping a file on gvim).
+        autocmd BufReadPost *
+          \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+          \   exe "normal g`\"" |
+          \ endif
+    
+        " Set syntax highlighting for specific file types
+        autocmd BufRead,BufNewFile Appraisals set filetype=ruby
+        autocmd BufRead,BufNewFile *.md set filetype=markdown
+        autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
+        autocmd BufRead,BufNewFile .j2 set filetype=jinja2
+         
+    au!
+  
+    " For all text files set 'textwidth' to 78 characters.
+    autocmd FileType text setlocal textwidth=80
+else
+"    set autoindent		" always set autoindenting on
+endif " has("autocmd")
+
+" Enable syntax-folding, and spice up the auto-formatting options.
+set foldmethod=syntax
+set fo+=n
+set foldlevelstart=99
+
+" Set the tabstop and shiftwidth.
+set tabstop=4 shiftwidth=4 expandtab shiftround smarttab
+
+" Some settings to make editing code nicer.
+set cino=g0,(0,t1,w1,*60 number
+
+let s:save_cpo = &cpo | set cpo&vim
+if !exists('g:VeryLiteral')
+  let g:VeryLiteral = 0
+endif
+
+function! s:VSetSearch(cmd)
+  let old_reg = getreg('"')
+  let old_regtype = getregtype('"')
+  normal! gvy
+  if @@ =~? '^[0-9a-z,_]*$' || @@ =~? '^[0-9a-z ,_]*$' && g:VeryLiteral
+    let @/ = @@
+  else
+    let pat = escape(@@, a:cmd.'\')
+    if g:VeryLiteral
+      let pat = substitute(pat, '\n', '\\n', 'g')
+    else
+      let pat = substitute(pat, '^\_s\+', '\\s\\+', '')
+      let pat = substitute(pat, '\_s\+$', '\\s\\*', '')
+      let pat = substitute(pat, '\_s\+', '\\_s\\+', 'g')
+    endif
+    let @/ = '\V'.pat
+  endif
+  normal! gV
+  call setreg('"', old_reg, old_regtype)
+endfunction
+
+vnoremap <silent> * :<C-U>call <SID>VSetSearch('/')<CR>/<C-R>/<CR>
+vnoremap <silent> # :<C-U>call <SID>VSetSearch('?')<CR>?<C-R>/<CR>
+vmap <kMultiply> *
+
+nmap <silent> <Plug>VLToggle :let g:VeryLiteral = !g:VeryLiteral
+  \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
+if !hasmapto("<Plug>VLToggle")
+  nmap <unique> <Leader>vl <Plug>VLToggle
+endif
+let &cpo = s:save_cpo | unlet s:save_cpo
+
 
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
@@ -26,79 +154,11 @@ endif
 
 filetype plugin indent on
 
-augroup vimrcEx
-  autocmd!
-
- " When editing a file, always jump to the last known cursor position.
- " Don't do it for commit messages, when the position is invalid, or when
- " inside an event handler (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
- " Set syntax highlighting for specific file types
-  autocmd BufRead,BufNewFile Appraisals set filetype=ruby
-  autocmd BufRead,BufNewFile *.md set filetype=markdown
-  autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
-  autocmd BufRead,BufNewFile .j2 set filetype=jinja2
-augroup END
-
-" When the type of shell script is /bin/sh, assume a POSIX-compatible
-" shell for syntax highlighting purposes.
-let g:is_posix = 1
-
-" Expand tab to 4 spaces
-set tabstop=4
-set softtabstop=4
-set expandtab
-set shiftwidth=4
-set smarttab
-
-" Display extra whitespace and tabs as characters, but not by default
-set list
-set listchars=tab:»·,trail:·,nbsp:·
-
-" Use one space, not two, after punctuation.
-set nojoinspaces
-
-" Numbers
-set number
-set numberwidth=5
-
-" Get off my lawn
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-
-" Run commands that require an interactive shell
-nnoremap <Leader>r :RunInInteractiveShell<space>
-
-" Treat <li> and <p> tags like the block tags they are
-let g:html_indent_tags = 'li\|p'
-
-" Open new split panes to right and bottom, which feels more natural
-set splitbelow
-set splitright
-
-nnoremap <C-n> <c-w><
-nnoremap <C-m> <c-w>>
-
-" Quicker window movement
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-
 " configure syntastic syntax checking to check on open as well as save
 let g:syntastic_check_on_open=1
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 let g:syntastic_eruby_ruby_quiet_messages =
     \ {"regex": "possibly useless use of a variable in void context"}
-
-" Always use vertical diffs
-set diffopt+=vertical
 
 " Set the statusline
 set statusline=%f         " Path to the file
@@ -121,9 +181,11 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'pearofducks/ansible-vim'
 Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'nvie/vim-flake8'
+Plug 'kien/ctrlp.vim'
+let python_highlight_all=1
 
 " Add plugins to &runtimepath
 call plug#end()
