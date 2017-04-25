@@ -93,8 +93,10 @@ if has("autocmd")
          
     au!
   
+    " Spell check for text files
+    autocmd FileType text,latex,tex,md,markdown,rst setlocal spell
+
     " For all text files set 'textwidth' to 78 characters.
-    autocmd FileType latex,tex,md,markdown,rst setlocal spell
     autocmd FileType text setlocal textwidth=80
 else
 "    set autoindent		" always set autoindenting on
