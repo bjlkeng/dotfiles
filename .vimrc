@@ -188,7 +188,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
-let python_highlight_all=1
 
 " Add plugins to &runtimepath
 call plug#end()
+
+" Flake8 settings
+let python_highlight_all=1
+let g:flake8_show_in_gutter=1
+let g:flake8_show_in_file=1
+let g:flake8_show_quickfix=0
+autocmd BufWritePost *.py call Flake8()
