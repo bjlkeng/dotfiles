@@ -192,7 +192,7 @@ let g:syntastic_eruby_ruby_quiet_messages =
     \ {"regex": "possibly useless use of a variable in void context"}
 
 " Set the statusline
-set statusline=%f         " Path to the file
+set statusline=%f%m       " Path to the file
 set statusline+=%y        " Filetype of the file
 set statusline+=%=        " Switch to the right side
 set statusline+=Current:\ %-4l " Display current line
