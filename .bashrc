@@ -61,7 +61,7 @@ export LESS='-i -W -x4 -z-4 --no-init -R '
 
 # Tailor ls.
 alias l1='/usr/bin/ls -1'       # long format.
-alias ls='ls --color=auto -hF'  # color, human-readable sizes, and file-type indicators.
+alias ls='ls -hF'  # color, human-readable sizes, and file-type indicators.
 alias l='ls -l'                 # long format.
 alias la='ls -A'                # include dot-files.
 alias ll='ls -Al'               # long format, w/ dot-files.
@@ -77,6 +77,10 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias tagit="ctags --extra=+f -R "
+alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 
 # Tab complete sudo commands
 complete -cf sudo
