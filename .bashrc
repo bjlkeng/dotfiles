@@ -109,10 +109,7 @@ if [ -n $TMUX ]; then
    alias vim="TERM=screen-256color vim"
 fi
 
-# added by Anaconda3 4.3.1 installer
-export PATH="/home/brian/anaconda3/bin:$PATH"
-
-# CUDA
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cudnn/lib64
-export CUDA_HOME=/usr/local/cuda
-export PATH=/usr/local/cuda/bin:$PATH
+# Source local definitions if available
+if [ -f $HOME/.bashrc.local ]; then
+	. $HOME/.bashrc.local
+fi

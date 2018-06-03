@@ -238,7 +238,3 @@ let g:ctrlp_root_markers = ['.ctrlp']
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_max_files=0
-
-
-
-
