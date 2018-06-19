@@ -139,6 +139,34 @@ function! s:VSetSearch(cmd)
   call setreg('"', old_reg, old_regtype)
 endfunction
 
+" JSON beautify
+function! s:JSONClean()
+  execute "%!python -m json.tool" | w
+endfunction
+command JSONClean call s:JSONClean()
+
+" bkeng: Allow tagging into existing split window
+function! s:TagToExistingSplit()
+  " Get word under cursor
+  let s:word=expand("<cword>")
+  " Get current window number
+  let s:windowNumber=winnr()
+  try
+    " Switch to next window and try to tag to word
+    exe "wincmd w"
+    exe "tag" s:word
+  catch /E426:/
+    " If tag failed, switch back to old window and output error
+    exe s:windowNumber "wincmd w"
+    echohl ErrorMsg | echo v:exception | echohl None
+  endtry
+endfunction
+command TagToExistingSplit call s:TagToExistingSplit()
+if version >= 700
+  nnoremap <C-m> :TagToExistingSplit<CR>
+endi
+
+
 vnoremap <silent> * :<C-U>call <SID>VSetSearch('/')<CR>/<C-R>/<CR>
 vnoremap <silent> # :<C-U>call <SID>VSetSearch('?')<CR>?<C-R>/<CR>
 vmap <kMultiply> *
