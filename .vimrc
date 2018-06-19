@@ -235,7 +235,7 @@ let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_root_markers = ['.ctrlp']
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$\|env$\|cache$',
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|^data$\|log\|tmp$\|env$\|cache$',
   \ 'file': '\.exe$\|\.so$\|\.dat$'
   \ }
 let g:ctrlp_dotfiles = 0
