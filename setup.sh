@@ -37,7 +37,8 @@ if [ ! -f $HOME/.vim/colors/solarized.vim ]; then
 fi
 
 # Symlink all of our dotfiles to the home directory
-for i in .vimrc .gvimrc .dircolors .bashrc .bash_profile;
+mkdir -p $HOME/.config
+for i in .vimrc .gvimrc .dircolors .bashrc .bash_profile .config/flake8 .pylintrc .ctags ;
 do
   ln $params $script_home/$i $HOME/$i
 done

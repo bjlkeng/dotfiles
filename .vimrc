@@ -178,6 +178,34 @@ if !hasmapto("<Plug>VLToggle")
 endif
 let &cpo = s:save_cpo | unlet s:save_cpo
 
+" bkeng: Allow tagging into existing split window
+function! s:TagToExistingSplit()
+  " Get word under cursor
+  let s:word=expand("<cword>")
+  " Get current window number
+  let s:windowNumber=winnr()
+  try
+    " Switch to next window and try to tag to word
+    exe "wincmd w"
+    exe "tag" s:word
+  catch /E426:/
+    " If tag failed, switch back to old window and output error
+    exe s:windowNumber "wincmd w"
+    echohl ErrorMsg | echo v:exception | echohl None
+  endtry
+endfunction
+command TagToExistingSplit call s:TagToExistingSplit()
+if version >= 700
+  nnoremap <C-m> :TagToExistingSplit<CR>
+  autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+endi
+
+" JSON beautify
+function! s:JSONClean()
+  execute "%!python -m json.tool" | w
+endfunction
+command JSONClean call s:JSONClean()
+
 
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
@@ -192,7 +220,7 @@ let g:syntastic_eruby_ruby_quiet_messages =
     \ {"regex": "possibly useless use of a variable in void context"}
 
 " Set the statusline
-set statusline=%f         " Path to the file
+set statusline=%f%m       " Path to the file
 set statusline+=%y        " Filetype of the file
 set statusline+=%=        " Switch to the right side
 set statusline+=Current:\ %-4l " Display current line
@@ -213,10 +241,28 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
-let python_highlight_all=1
 
 " Add plugins to &runtimepath
 call plug#end()
+
+" Flake8 settings
+let python_highlight_all=1
+let g:flake8_show_in_gutter=1
+let g:flake8_show_in_file=1
+let g:flake8_show_quickfix=0
+autocmd BufWritePost *.py call Flake8()
+
+" Ctrl-P script
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class,*.jar
+let g:ctrlp_working_path_mode = 'ra'
+"let g:ctrlp_match_window_bottom = 0
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_root_markers = ['.ctrlp']
+let g:ctrlp_dotfiles = 0
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_max_files=0
