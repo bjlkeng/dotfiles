@@ -139,12 +139,6 @@ function! s:VSetSearch(cmd)
   call setreg('"', old_reg, old_regtype)
 endfunction
 
-" JSON beautify
-function! s:JSONClean()
-  execute "%!python -m json.tool" | w
-endfunction
-command JSONClean call s:JSONClean()
-
 " bkeng: Allow tagging into existing split window
 function! s:TagToExistingSplit()
   " Get word under cursor
@@ -165,7 +159,6 @@ command TagToExistingSplit call s:TagToExistingSplit()
 if version >= 700
   nnoremap <C-m> :TagToExistingSplit<CR>
 endi
-
 
 vnoremap <silent> * :<C-U>call <SID>VSetSearch('/')<CR>/<C-R>/<CR>
 vnoremap <silent> # :<C-U>call <SID>VSetSearch('?')<CR>?<C-R>/<CR>
@@ -177,28 +170,6 @@ if !hasmapto("<Plug>VLToggle")
   nmap <unique> <Leader>vl <Plug>VLToggle
 endif
 let &cpo = s:save_cpo | unlet s:save_cpo
-
-" bkeng: Allow tagging into existing split window
-function! s:TagToExistingSplit()
-  " Get word under cursor
-  let s:word=expand("<cword>")
-  " Get current window number
-  let s:windowNumber=winnr()
-  try
-    " Switch to next window and try to tag to word
-    exe "wincmd w"
-    exe "tag" s:word
-  catch /E426:/
-    " If tag failed, switch back to old window and output error
-    exe s:windowNumber "wincmd w"
-    echohl ErrorMsg | echo v:exception | echohl None
-  endtry
-endfunction
-command TagToExistingSplit call s:TagToExistingSplit()
-if version >= 700
-  nnoremap <C-m> :TagToExistingSplit<CR>
-  autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-endi
 
 " JSON beautify
 function! s:JSONClean()
@@ -263,6 +234,10 @@ let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_root_markers = ['.ctrlp']
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc\|public\/images\|public\/system\|data\|log\|tmp$\|env$\|cache$',
+  \ 'file': '\.exe$\|\.so$\|\.dat$'
+  \ }
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_max_files=0
