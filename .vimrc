@@ -184,24 +184,6 @@ endif
 
 filetype plugin indent on
 
-" configure syntastic syntax checking to check on open as well as save
-let g:syntastic_check_on_open=1
-let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
-let g:syntastic_eruby_ruby_quiet_messages =
-    \ {"regex": "possibly useless use of a variable in void context"}
-
-" Set the statusline
-set statusline=%f%m       " Path to the file
-set statusline+=%y        " Filetype of the file
-set statusline+=%=        " Switch to the right side
-set statusline+=Current:\ %-4l " Display current line
-set statusline+=Total:\ %-4L " Dispay total lines
-set statusline+=%{fugitive#statusline()} " Git status
-
-" map nerdtree viewport to CTRL+n
-
-map <C-t> :NERDTreeToggle<CR>
-
 " vim-plug configuration
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -212,19 +194,33 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-fugitive'
-" Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
 
 " Add plugins to &runtimepath
 call plug#end()
 
+
+" Set the statusline
+let g:syntastic_check_on_open=1 
+set statusline=%f%m       " Path to the file
+set statusline+=%y        " Filetype of the file
+set statusline+=%=        " Switch to the right side
+set statusline+=%l,%c" Display current line
+" set statusline+=Total:\ %-4L " Dispay total lines
+set statusline+=%{fugitive#statusline()} " Git status
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_python_checkers = ['flake8']
+
 " Flake8 settings
 let python_highlight_all=1
 let g:flake8_show_in_gutter=1
 let g:flake8_show_in_file=1
 let g:flake8_show_quickfix=0
-autocmd BufWritePost *.py call Flake8()
+" autocmd BufWritePost *.py call Flake8()
 
 " Ctrl-P script
 set runtimepath^=~/.vim/bundle/ctrlp.vim
