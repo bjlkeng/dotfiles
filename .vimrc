@@ -198,10 +198,6 @@ set statusline+=Current:\ %-4l " Display current line
 set statusline+=Total:\ %-4L " Dispay total lines
 set statusline+=%{fugitive#statusline()} " Git status
 
-" map nerdtree viewport to CTRL+n
-
-map <C-t> :NERDTreeToggle<CR>
-
 " vim-plug configuration
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -215,6 +211,7 @@ Plug 'tpope/vim-fugitive'
 " Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
+Plug 'scrooloose/nerdtree'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -241,3 +238,6 @@ let g:ctrlp_custom_ignore = {
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_max_files=0
+
+" Nerdtree
+map <C-n> :NERDTreeToggle<CR>
