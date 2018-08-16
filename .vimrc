@@ -177,6 +177,8 @@ function! s:JSONClean()
 endfunction
 command JSONClean call s:JSONClean()
 
+" ctags
+set tags=tags;/
 
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
