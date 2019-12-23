@@ -68,7 +68,19 @@ endif
 " Also load indent files, to automatically do language-dependent indenting.
 filetype plugin indent on
 
+" configure syntastic syntax checking to check on open as well as save
+let g:syntastic_check_on_open=1
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+let g:syntastic_eruby_ruby_quiet_messages =
+    \ {"regex": "possibly useless use of a variable in void context"}
 
+" Set the statusline
+set statusline=%f%m       " Path to the file
+set statusline+=%y        " Filetype of the file
+set statusline+=%=        " Switch to the right side
+set statusline+=Current:\ %-4l " Display current line
+set statusline+=Total:\ %-4L " Dispay total lines
+set statusline+=%{fugitive#statusline()} " Git status
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -177,28 +189,12 @@ function! s:JSONClean()
 endfunction
 command JSONClean call s:JSONClean()
 
-" ctags
-set tags=tags;/
 
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
 endif
 
 filetype plugin indent on
-
-" configure syntastic syntax checking to check on open as well as save
-let g:syntastic_check_on_open=1
-let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
-let g:syntastic_eruby_ruby_quiet_messages =
-    \ {"regex": "possibly useless use of a variable in void context"}
-
-" Set the statusline
-set statusline=%f%m       " Path to the file
-set statusline+=%y        " Filetype of the file
-set statusline+=%=        " Switch to the right side
-set statusline+=Current:\ %-4l " Display current line
-set statusline+=Total:\ %-4L " Dispay total lines
-set statusline+=%{fugitive#statusline()} " Git status
 
 " vim-plug configuration
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -213,7 +209,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -255,5 +252,24 @@ let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_max_files=0
 
-" Nerdtree
-map <C-n> :NERDTreeToggle<CR>
+" NerdTree Shortcuts
+nmap <F6> :NERDTreeToggle<CR>
+
+" COC - Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" nvim settings
+set cmdheight=2
+set updatetime=300
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" highlight Pmenu ctermbg=gray guibg=gray
