@@ -36,6 +36,13 @@ if [ ! -f $HOME/.vim/colors/solarized.vim ]; then
     https://raw.githubusercontent.com/altercation/vim-colors-solarized/master/colors/solarized.vim
 fi
 
+# Add restructured text highlighting for vim if not present
+if [ ! -f $HOME/.vim/syntax/rst.vim ]; then
+    cp rst.vim $HOME/.vim/syntax/rst.vim
+    #curl -fLo $HOME/.vim/syntax/rst.vim --create-dirs \
+    #https://raw.githubusercontent.com/marshallward/vim-restructuredtext/master/syntax/rst.vim
+fi
+
 # Symlink all of our dotfiles to the home directory
 mkdir -p $HOME/.config
 for i in .vimrc .gvimrc .dircolors .bashrc .bash_profile .config/flake8 .pylintrc .ctags ;

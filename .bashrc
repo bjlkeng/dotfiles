@@ -79,7 +79,7 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
-alias tagit="ctags --extra=+f -R "
+alias tagit="ctags --extras=+f -R "
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 
 # Tab complete sudo commands
