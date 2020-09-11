@@ -106,6 +106,7 @@ if has("autocmd")
     au!
   
     " Spell check for text files
+    autocmd FileType rst syn spell toplevel
     autocmd FileType text,latex,tex,md,markdown,rst setlocal spell
 
     " For all text files set 'textwidth' to 78 characters.
@@ -113,6 +114,12 @@ if has("autocmd")
 else
 "    set autoindent		" always set autoindenting on
 endif " has("autocmd")
+
+" Spell check
+hi clear SpellBad
+hi SpellBad cterm=underline ctermfg=red
+" Set style for gVim
+hi SpellBad gui=undercurl
 
 " Enable syntax-folding, and spice up the auto-formatting options.
 set foldmethod=syntax
