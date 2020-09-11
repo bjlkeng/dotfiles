@@ -117,7 +117,7 @@ endif " has("autocmd")
 
 " Spell check
 hi clear SpellBad
-hi SpellBad cterm=underline ctermfg=red
+hi SpellBad cterm=underline ctermfg=darkred
 " Set style for gVim
 hi SpellBad gui=undercurl
 
