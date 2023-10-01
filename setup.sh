@@ -37,7 +37,7 @@ if [ ! -f $HOME/.vim/colors/solarized.vim ]; then
 fi
 
 # Add restructured text highlighting for vim if not present
-if [ ! -f $HOME/.vim/syntax/rst.vim ]; then
+if [ -d $HOME/.vim/syntax] && [! -f $HOME/.vim/syntax/rst.vim ]; then
     cp rst.vim $HOME/.vim/syntax/rst.vim
     #curl -fLo $HOME/.vim/syntax/rst.vim --create-dirs \
     #https://raw.githubusercontent.com/marshallward/vim-restructuredtext/master/syntax/rst.vim
