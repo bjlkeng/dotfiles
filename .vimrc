@@ -217,7 +217,7 @@ Plug 'scrooloose/syntastic'
 Plug 'nvie/vim-flake8'
 Plug 'kien/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -263,10 +263,10 @@ let g:ctrlp_max_files=0
 nmap <F6> :NERDTreeToggle<CR>
 
 " COC - Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
 
 " nvim settings
 set cmdheight=2
