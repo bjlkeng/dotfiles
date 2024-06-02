@@ -7,14 +7,14 @@ set noguipty
 " set the X11 font to use
 " set guifont=-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1
 
-if has("gui_gtk2")
-    set guifont=Luxi\ Mono\ 9
-elseif has("x11")
-    " Also for GTK 1
-    set guifont=*-lucidatypewriter-medium-r-normal-*-*-180-*-*-m-*-*
-elseif has("gui_win32")
-    set guifont=Luxi_Mono:h9:cANSI
-endif
+# if has("gui_gtk2")
+#     set guifont=Luxi\ Mono\ 9
+# elseif has("x11")
+#     " Also for GTK 1
+#     set guifont=*-lucidatypewriter-medium-r-normal-*-*-180-*-*-m-*-*
+# elseif has("gui_win32")
+#     set guifont=Luxi_Mono:h9:cANSI
+# endif
 
 set ch=2                " Make command line two lines high
 set mousehide           " Hide the mouse when typing text
@@ -49,7 +49,7 @@ if version >= 500
   highlight Folded guibg=grey10   guifg=grey30
 
   " A better font for the gui.
-  set guifont=Luxi\ Mono\ 10 
+  set guifont=Monaco:h18
 endif
 
 " Setup multiple tabs.
